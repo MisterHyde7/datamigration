@@ -26,10 +26,11 @@ import org.springframework.transaction.PlatformTransactionManager;
  * PersistenceProductConfiguration.
  */
 //@Configuration
-@PropertySource({ "classpath:persistence-multiple-db-boot.properties" })
+@PropertySource({ "classpath:application.properties" })
 @EnableJpaRepositories(basePackages = "it.prova.datamigration.dto", entityManagerFactoryRef = "oldEntityManager", transactionManagerRef = "oldTransactionManager")
 @Profile("!tc")
 public class PersistenceOldDataAutoConfiguration {
+
 	@Autowired
 	private Environment env;
 
@@ -39,11 +40,17 @@ public class PersistenceOldDataAutoConfiguration {
 
 	//
 
+//	@Bean
+//	@ConfigurationProperties(prefix = "spring.second-datasource")
+//	public DataSource oldDataSource() {
+//		return DataSourceBuilder.create().build();
+//	}
+
 	@Bean
 	public LocalContainerEntityManagerFactoryBean oldEntityManager() {
 		final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		em.setDataSource(productDataSource());
-		em.setPackagesToScan("it.prova.datamigration.dto");
+		em.setDataSource(oldDataSource());
+		em.setPackagesToScan(new String[] { "it.prova.datamigration.dto.AssicuratoDTO" });
 
 		final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
@@ -57,7 +64,7 @@ public class PersistenceOldDataAutoConfiguration {
 
 	@Bean
 	@ConfigurationProperties(prefix = "spring.second-datasource")
-	public DataSource productDataSource() {
+	public DataSource oldDataSource() {
 		return DataSourceBuilder.create().build();
 	}
 

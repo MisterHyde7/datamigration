@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -27,10 +26,11 @@ import org.springframework.transaction.PlatformTransactionManager;
  * PersistenceUserConfiguration.
  */
 //@Configuration
-@PropertySource({ "classpath:persistence-multiple-db-boot.properties" })
-@EnableJpaRepositories(basePackages = "it.prova.datamigration.dto", entityManagerFactoryRef = "newEntityManager", transactionManagerRef = "newTransactionManager")
+@PropertySource({ "classpath:application.properties" })
+@EnableJpaRepositories(basePackages = "it.prova.datamigration.model", entityManagerFactoryRef = "newEntityManager", transactionManagerRef = "newTransactionManager")
 @Profile("!tc")
 public class PersistenceNewDataAutoConfiguration {
+
 	@Autowired
 	private Environment env;
 
@@ -40,12 +40,17 @@ public class PersistenceNewDataAutoConfiguration {
 
 	//
 
-	@Primary
+//	@Bean
+//	@ConfigurationProperties(prefix = "spring.datasource")
+//	public DataSource newDataSource() {
+//		return DataSourceBuilder.create().build();
+//	}
+
 	@Bean
 	public LocalContainerEntityManagerFactoryBean newEntityManager() {
 		final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(newDataSource());
-		em.setPackagesToScan("it.prova.datamigration.dto");
+		em.setPackagesToScan(new String[] { "it.prova.datamigration.model.assicurato" });
 
 		final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
@@ -58,13 +63,11 @@ public class PersistenceNewDataAutoConfiguration {
 	}
 
 	@Bean
-	@Primary
 	@ConfigurationProperties(prefix = "spring.datasource")
 	public DataSource newDataSource() {
 		return DataSourceBuilder.create().build();
 	}
 
-	@Primary
 	@Bean
 	public PlatformTransactionManager newTransactionManager() {
 		final JpaTransactionManager transactionManager = new JpaTransactionManager();

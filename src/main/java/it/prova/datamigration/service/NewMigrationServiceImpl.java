@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.datamigration.dto.AssicuratoDTO;
 import it.prova.datamigration.dto.TransferErrorDTO;
-import it.prova.datamigration.repository.NewMigrationRepository;
-import it.prova.datamigration.repository.OldMigrationRepository;
+import it.prova.datamigration.repository.newdata.NewMigrationRepository;
+import it.prova.datamigration.repository.olddata.OldMigrationRepository;
 
 @Service
 public class NewMigrationServiceImpl implements NewMigrationService {

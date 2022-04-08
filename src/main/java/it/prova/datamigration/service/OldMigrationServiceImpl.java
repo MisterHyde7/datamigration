@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.prova.datamigration.dto.AssicuratoDTO;
-import it.prova.datamigration.repository.OldMigrationRepository;
+import it.prova.datamigration.repository.olddata.OldMigrationRepository;
 
 @Service
 public class OldMigrationServiceImpl implements OldMigrationService {
@@ -22,6 +22,7 @@ public class OldMigrationServiceImpl implements OldMigrationService {
 	}
 
 	@Override
+	@Transactional("oldTransactionManager")
 	public int contaSinistri(Long id) {
 		return repository.countSinistri(id);
 	}
